@@ -1,7 +1,10 @@
 import json
 import numpy as np
 import nltk
+import math
+from scipy import stats
 from nltk.corpus import wordnet as wn
+from depthPerception import get_depth_map, binarize_depth_map
 
 def _tokenize_and_tag(sentence):
     tokens = nltk.word_tokenize(sentence)
@@ -76,15 +79,36 @@ def merge_object_detections(annotations):
     # Combine the filtered yolo and grit to create the final merged list
     return merged_list + grit
 
+def map_objects_to_planes(annotations, depth_map):
+    for obj in annotations:
+        x0, y0, x1, y1 = obj[1:-1]
+        region = depth_map[math.floor(y0):math.ceil(y1), math.floor(x0):math.ceil(x1)]
+        plane = stats.mode(region, axis=None)[0]
+        if plane:
+            obj.append("foreground")
+        else:
+            obj.append("background")
+    return annotations
+
 if __name__ == "__main__":
     
     f = open('annotations.json')
     annotations = json.load(f)
     f.close()
     
-    print("Object detections filtered: ")
-    for e in merge_object_detections(annotations):
-        print(e[0])
+    # filter object detections to eliminate redundant detections
+    filtered_object_detections = merge_object_detections(annotations)
+
+    # create depth map of the image and binarize it
+    depth_map = get_depth_map('../imgs/20190831_070629_000.jpg')
+    bin_depth_map = binarize_depth_map(depth_map)
+    
+    # use depth map to establish which objects are on the foreground and which are on the background
+    map_objects_to_planes(filtered_object_detections, bin_depth_map)
+
+
+
+
 
 
     

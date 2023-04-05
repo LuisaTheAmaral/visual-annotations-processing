@@ -2,3 +2,5 @@ inflect
 opencv-python
 nltk
 matplotlib
+scipy
+timm
