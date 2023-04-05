@@ -1,2 +1,4 @@
 inflect
 opencv-python
+nltk
+matplotlib
