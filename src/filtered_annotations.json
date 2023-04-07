@@ -1,0 +1,134 @@
+{
+    "craft": [
+        [
+            "Hello!",
+            390,
+            380,
+            410,
+            390,
+            56,
+            "background"
+        ]
+    ],
+    "clipcap": [
+        "the food court at the train station.",
+        "A man standing in front of a counter filled with food."
+    ],
+    "places": {
+        "environment": "inside",
+        "categories": [
+            "bar",
+            "kitchen"
+        ]
+    },
+    "object_detection": [
+        [
+            "refrigerator",
+            347.12518310546875,
+            355.33349609375,
+            443.14361572265625,
+            452.51971435546875,
+            0.3636837303638458,
+            "background"
+        ],
+        [
+            "potted plant",
+            470.99774169921875,
+            410.499267578125,
+            525.3099365234375,
+            450.87847900390625,
+            0.6767275929450989,
+            "background"
+        ],
+        [
+            "man wearing a black jacket and black pants",
+            1.518,
+            166.434,
+            234.521,
+            766.3079,
+            0.736,
+            "foreground"
+        ],
+        [
+            "man wearing navy blue shirt",
+            718.9583,
+            286.8078,
+            1021.6623,
+            766.3102,
+            0.6395,
+            "foreground"
+        ],
+        [
+            "a man wearing a brown shirt",
+            554.1194,
+            348.7597,
+            712.3477,
+            525.8813,
+            0.7185,
+            "background"
+        ],
+        [
+            "a jar of candy",
+            496.1126,
+            533.2581,
+            610.9136,
+            678.8179,
+            0.5613,
+            "background"
+        ],
+        [
+            "light hanging from ceiling",
+            571.652,
+            35.8499,
+            659.173,
+            195.0675,
+            0.6773,
+            "background"
+        ],
+        [
+            "hanging kitchen lights",
+            303.1364,
+            2.1896,
+            1024.0,
+            313.9793,
+            0.414,
+            "background"
+        ],
+        [
+            "red plastic pitcher on counter",
+            591.1835,
+            521.2121,
+            687.3672,
+            677.5264,
+            0.5612,
+            "foreground"
+        ],
+        [
+            "colorful paper lanterns",
+            680.4746,
+            132.4987,
+            814.6129,
+            279.9016,
+            0.4168,
+            "background"
+        ],
+        [
+            "large white container on counter",
+            227.7861,
+            432.1114,
+            336.1744,
+            511.7038,
+            0.5321,
+            "background"
+        ],
+        [
+            "the counter is brown",
+            151.4021,
+            498.4172,
+            734.5193,
+            767.3846,
+            0.563,
+            "foreground"
+        ]
+    ]
+}

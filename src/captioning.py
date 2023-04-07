@@ -5,6 +5,7 @@ import math
 from scipy import stats
 from nltk.corpus import wordnet as wn
 from depthPerception import get_depth_map, binarize_depth_map
+from plot_boxes import plotFilteredBoundingBoxes
 
 def _tokenize_and_tag(sentence):
     tokens = nltk.word_tokenize(sentence)
@@ -117,7 +118,8 @@ if __name__ == "__main__":
     f.close()
     
     # create depth map of the image and binarize it
-    depth_map = get_depth_map('../imgs/20190831_070629_000.jpg')
+    input_image = '../imgs/20190831_070629_000.jpg'
+    depth_map = get_depth_map(input_image)
     bin_depth_map = binarize_depth_map(depth_map)
 
     # use depth map to establish which objects are on the foreground and which are on the background
@@ -126,11 +128,16 @@ if __name__ == "__main__":
     # filter object detections to eliminate redundant detections
     filtered_object_detections = merge_object_detections(annotations)
     print(filtered_object_detections)
-    
-    
-    # print(get_overlap_ratio([1.518, 166.434, 234.521, 766.3079, 0, 'foreground'], [1.9926, 235.8012, 214.8844, 535.3787,0, 'foreground']))
-    # print(get_max_similarity('man wearing a black jacket and black pants', 'man wearing a black jacket'))
 
+    del annotations["grit"]
+    del annotations["yolo"]
+    annotations["object_detection"] = filtered_object_detections
+
+    with open("filtered_annotations.json", "w") as outfile:
+        json.dump(annotations, outfile)
+
+    output_name = "../annotated/filtered.jpg"
+    plotFilteredBoundingBoxes(input_image, output_name, annotations['object_detection'])    
 
 
 

@@ -25,6 +25,31 @@ def plotBoundingBoxes(img_path, output_name, annotations, color=None):
     
     cv2.imwrite(output_name, img)
 
+def plotFilteredBoundingBoxes(img_path, output_name, annotations):
+
+    img = cv2.imread(img_path)
+
+    for obj, x0, y0, x1, y1, score, plane in annotations:
+        start_point = (int(x0), int(y0))
+        end_point = (int(x1), int(y1))
+        if plane == "foreground":
+            color = (0,0,255)
+        else:
+            color = (255,0,0)
+        cv2.rectangle(img, start_point, end_point, color=color, thickness=2)
+
+        cv2.putText(
+            img,
+            obj,
+            (int(x0), int(y0) - 10),
+            fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+            fontScale = 0.6,
+            color = color,
+            thickness=2
+        )
+    
+    cv2.imwrite(output_name, img)
+
 def getRandomColor():
     return (randrange(255), randrange(255), randrange(255))
 
