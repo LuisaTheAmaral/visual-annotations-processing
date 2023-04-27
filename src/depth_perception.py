@@ -1,6 +1,8 @@
 import cv2
 import torch
 import numpy as np
+import math
+from scipy import stats
 
 def get_depth_map(filename):
 
@@ -44,3 +46,14 @@ def binarize_depth_map(depth_map):
     threshold = np.mean(depth_map) #set threshold
     bin_depth_map = np.where(depth_map > threshold, 1, 0) #binarize image
     return bin_depth_map
+
+def map_objects_to_planes(annotations, depth_map):
+    for obj in annotations['yolo'] + annotations['grit'] + annotations['craft']:
+        x0, y0, x1, y1 = obj[1:-1]
+        region = depth_map[math.floor(y0):math.ceil(y1), math.floor(x0):math.ceil(x1)]
+        plane = stats.mode(region, axis=None, keepdims=True)[0]
+        if plane:
+            obj.append("foreground")
+        else:
+            obj.append("background")
+    return annotations

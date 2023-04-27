@@ -1,4 +1,5 @@
 {
+    "id": "20190831_070629_000.jpg",
     "craft": [
         [
             "Hello!",
@@ -42,9 +43,9 @@
         ],
         [
             "man wearing a black jacket and black pants",
-            1.518,
+            1.5179,
             166.434,
-            234.521,
+            234.5211,
             766.3079,
             0.736,
             "foreground"
@@ -80,54 +81,45 @@
             "light hanging from ceiling",
             571.652,
             35.8499,
-            659.173,
+            659.1731,
             195.0675,
             0.6773,
             "background"
         ],
         [
-            "hanging kitchen lights",
-            303.1364,
-            2.1896,
-            1024.0,
-            313.9793,
-            0.414,
-            "background"
-        ],
-        [
             "red plastic pitcher on counter",
-            591.1835,
+            591.1834,
             521.2121,
-            687.3672,
+            687.3671,
             677.5264,
             0.5612,
             "foreground"
         ],
         [
-            "colorful paper lanterns",
-            680.4746,
-            132.4987,
-            814.6129,
-            279.9016,
-            0.4168,
-            "background"
-        ],
-        [
-            "large white container on counter",
-            227.7861,
-            432.1114,
-            336.1744,
-            511.7038,
-            0.5321,
-            "background"
-        ],
-        [
             "the counter is brown",
-            151.4021,
+            151.4024,
             498.4172,
             734.5193,
             767.3846,
             0.563,
+            "foreground"
+        ],
+        [
+            "the man is balding",
+            844.0063,
+            287.0492,
+            1002.1718,
+            405.12,
+            0.6084,
+            "foreground"
+        ],
+        [
+            "a stack of white plates",
+            667.7311,
+            528.79,
+            734.1595,
+            648.4556,
+            0.6507,
             "foreground"
         ]
     ]

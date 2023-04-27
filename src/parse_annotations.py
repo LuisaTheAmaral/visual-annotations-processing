@@ -1,11 +1,7 @@
-import json
 import numpy as np
 import nltk
-import math
-from scipy import stats
 from nltk.corpus import wordnet as wn
-from depthPerception import get_depth_map, binarize_depth_map
-from plot_boxes import plotFilteredBoundingBoxes
+import math
 
 def _tokenize_and_tag(sentence):
     tokens = nltk.word_tokenize(sentence)
@@ -100,46 +96,3 @@ def merge_object_detections(annotations):
     # Combine the filtered yolo and grit lists to create the final merged list
     return merged_list + grit
 
-def map_objects_to_planes(annotations, depth_map):
-    for obj in annotations['yolo'] + annotations['grit'] + annotations['craft']:
-        x0, y0, x1, y1 = obj[1:-1]
-        region = depth_map[math.floor(y0):math.ceil(y1), math.floor(x0):math.ceil(x1)]
-        plane = stats.mode(region, axis=None)[0]
-        if plane:
-            obj.append("foreground")
-        else:
-            obj.append("background")
-    return annotations
-
-if __name__ == "__main__":
-    
-    f = open('annotations.json')
-    annotations = json.load(f)
-    f.close()
-    
-    # create depth map of the image and binarize it
-    input_image = '../imgs/20190831_070629_000.jpg'
-    depth_map = get_depth_map(input_image)
-    bin_depth_map = binarize_depth_map(depth_map)
-
-    # use depth map to establish which objects are on the foreground and which are on the background
-    map_objects_to_planes(annotations, bin_depth_map)
-    
-    # filter object detections to eliminate redundant detections
-    filtered_object_detections = merge_object_detections(annotations)
-    print(filtered_object_detections)
-
-    del annotations["grit"]
-    del annotations["yolo"]
-    annotations["object_detection"] = filtered_object_detections
-
-    with open("filtered_annotations.json", "w") as outfile:
-        json.dump(annotations, outfile)
-
-    output_name = "../annotated/filtered.jpg"
-    plotFilteredBoundingBoxes(input_image, output_name, annotations['object_detection'])    
-
-
-
-
-    
