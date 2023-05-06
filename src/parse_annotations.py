@@ -55,44 +55,73 @@ def merge_object_detections(annotations):
     grit = annotations['grit']
     yolo = annotations['yolo']
 
-    # Compute the overlap ratios and similarity ratios between elements in grit
-    for i, obj1 in enumerate(grit):
-        keep_obj1 = True
-        keep_obj2 = True
-        for j, obj2 in enumerate(grit[i+1:]):
-            j = i + j + 1  # adjust index for nested loop
+    if len(grit):
+        # Compute the overlap ratios and similarity ratios between elements in grit
+        for i, obj1 in enumerate(grit):
+            keep_obj1 = True
             keep_obj2 = True
-            overlap_ratio = get_overlap_ratio(obj1[1:], obj2[1:])
-            similarity = get_max_similarity(obj1[0], obj2[0])
-            if overlap_ratio >= 0.7 or (0.4 <= overlap_ratio < 0.7 and similarity > 0.5):
-                if len(obj1[0]) >= len(obj2[0]):
-                    if obj2 in grit:
-                        grit.remove(obj2)
-                        #print(f"Object {obj2[0]} was excluded by {obj1[0]}")
-                else:
-                    if obj1 in grit:
-                        grit.remove(obj1)
-                        #print(f"Object {obj1[0]} was excluded by {obj2[0]}")
-                        break #object 1 is out so no need to compare it with the remaining objects
+            for j, obj2 in enumerate(grit[i+1:]):
+                j = i + j + 1  # adjust index for nested loop
+                keep_obj2 = True
+                overlap_ratio = get_overlap_ratio(obj1[1:], obj2[1:])
+                similarity = get_max_similarity(obj1[0], obj2[0])
+                if overlap_ratio >= 0.7 or (0.4 <= overlap_ratio < 0.7 and similarity > 0.5):
+                    if len(obj1[0]) >= len(obj2[0]):
+                        if obj2 in grit:
+                            grit.remove(obj2)
+                            #print(f"Object {obj2[0]} was excluded by {obj1[0]}")
+                    else:
+                        if obj1 in grit:
+                            grit.remove(obj1)
+                            #print(f"Object {obj1[0]} was excluded by {obj2[0]}")
+                            break #object 1 is out so no need to compare it with the remaining objects
 
-    # Compute the overlap ratios and similarity ratios between elements in yolo and grit
-    overlap_ratios = np.zeros((len(yolo), len(grit)))
-    similarity_ratios = np.zeros((len(yolo), len(grit)))
-    for i, elem1 in enumerate(yolo):
-        for j, elem2 in enumerate(grit):
-            overlap_ratios[i, j] = get_overlap_ratio(elem1[1:], elem2[1:])
-            similarity_ratios[i, j] = get_max_similarity(elem1[0], elem2[0])
+    if len(yolo):
+        # Compute the overlap ratios and similarity ratios between elements in grit
+        for i, obj1 in enumerate(yolo):
+            keep_obj1 = True
+            keep_obj2 = True
+            for j, obj2 in enumerate(yolo[i+1:]):
+                j = i + j + 1  # adjust index for nested loop
+                keep_obj2 = True
+                overlap_ratio = get_overlap_ratio(obj1[1:], obj2[1:])
+                similarity = get_max_similarity(obj1[0], obj2[0])
+                if overlap_ratio >= 0.7 or (0.4 <= overlap_ratio < 0.7 and similarity > 0.5):
+                    if obj1[-1] >= obj2[-1]:
+                        if obj2 in yolo:
+                            yolo.remove(obj2)
+                            #print(f"Object {obj2[0]} was excluded by {obj1[0]}")
+                    else:
+                        if obj1 in yolo:
+                            yolo.remove(obj1)
+                            #print(f"Object {obj1[0]} was excluded by {obj2[0]}")
+                            break #object 1 is out so no need to compare it with the remaining objects
 
-    # Filter out elements from yolo that have an overlap ratio greater than or equal to 0.7 with any element in grit
-    merged_list = [yolo[i] for i in range(len(yolo)) if np.max(overlap_ratios[i]) < 0.7]
+    merged_list = []
+    if len(yolo) and len(grit):
+        # Compute the overlap ratios and similarity ratios between elements in yolo and grit
+        overlap_ratios = np.zeros((len(yolo), len(grit)))
+        similarity_ratios = np.zeros((len(yolo), len(grit)))
+        for i, elem1 in enumerate(yolo):
+            for j, elem2 in enumerate(grit):
+                overlap_ratios[i, j] = get_overlap_ratio(elem1[1:], elem2[1:])
+                similarity_ratios[i, j] = get_max_similarity(elem1[0], elem2[0])
 
-    # Filter out elements from yolo that have an overlap ratio between 0.4 and 0.7 with at least one element in grit and that have a high object similarity
-    for i, elem1 in enumerate(yolo):
-        for j, elem2 in enumerate(grit):
-            if 0.4 <= overlap_ratios[i, j] < 0.7 and similarity_ratios[i, j] < 0.5:
-                merged_list.append(elem1)
-                break
+        # Filter out elements from yolo that have an overlap ratio greater than or equal to 0.7 with any element in grit
+        merged_list = [yolo[i] for i in range(len(yolo)) if np.max(overlap_ratios[i]) < 0.7]
+
+        # Filter out elements from yolo that have an overlap ratio between 0.4 and 0.7 with at least one element in grit and that have a high object similarity
+        for i, elem1 in enumerate(yolo):
+            for j, elem2 in enumerate(grit):
+                if 0.4 <= overlap_ratios[i, j] < 0.7 and similarity_ratios[i, j] < 0.5:
+                    merged_list.append(elem1)
+                    break
+    elif len(yolo):
+        return yolo
+    elif len(grit):
+        return grit
 
     # Combine the filtered yolo and grit lists to create the final merged list
     return merged_list + grit
+
 

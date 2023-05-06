@@ -106,8 +106,25 @@
             
         ],
         "places": {
-            "environment" : "",
-            "categories" : []
+            "environment": "indoor",
+            "categories": {
+                "office_cubicles": 0.28790053725242615,
+                "server_room": 0.20555849373340607,
+                "office": 0.10730176419019699,
+                "clean_room": 0.04730740189552307,
+                "computer_room": 0.037378277629613876
+            },
+            "attributes": [
+                "no horizon",
+                "enclosed area",
+                "man-made",
+                "indoor lighting",
+                "working",
+                "glossy",
+                "matte",
+                "plastic",
+                "metal"
+            ]
         }
     },
     {

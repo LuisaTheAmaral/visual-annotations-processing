@@ -2,9 +2,9 @@ import json
 from depth_perception import get_depth_map, binarize_depth_map, map_objects_to_planes
 from plot_boxes import plotFilteredBoundingBoxes
 from parse_annotations import merge_object_detections
-from sentence_builder import find_groups
+from sentence_builder import find_groups, parse_ocr
 
-f = open('annotations.json')
+f = open('annotations2.json')
 annotations = json.load(f)
 f.close()
 
@@ -23,7 +23,9 @@ for img_annotations in annotations:
     bin_depth_map = binarize_depth_map(depth_map)
 
     # use depth map to establish which objects are on the foreground and which are on the background
-    map_objects_to_planes(img_annotations, bin_depth_map)
+    map_objects_to_planes(img_annotations["grit"], bin_depth_map)
+    map_objects_to_planes(img_annotations["yolo"], bin_depth_map)
+    map_objects_to_planes(img_annotations["craft"], bin_depth_map)
 
     # filter object detections to eliminate redundant detections
     filtered_object_detections = merge_object_detections(img_annotations)
@@ -33,6 +35,13 @@ for img_annotations in annotations:
     del img_annotations["yolo"]
     img_annotations["object_detection"] = filtered_object_detections
 
+    s = parse_ocr(filtered_object_detections, img_annotations["craft"])
+    
+    print(img_name)
+    print("---------------------------------------------------")
+    print(filtered_object_detections)
+    print("---------------------------------------------------")
+    print(s)
     #print(find_groups(img_annotations["object_detection"]))
 
     # with open("filtered_annotations.json", "w") as outfile:

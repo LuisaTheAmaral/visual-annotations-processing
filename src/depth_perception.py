@@ -48,7 +48,7 @@ def binarize_depth_map(depth_map):
     return bin_depth_map
 
 def map_objects_to_planes(annotations, depth_map):
-    for obj in annotations['yolo'] + annotations['grit'] + annotations['craft']:
+    for obj in annotations:
         x0, y0, x1, y1 = obj[1:-1]
         region = depth_map[math.floor(y0):math.ceil(y1), math.floor(x0):math.ceil(x1)]
         plane = stats.mode(region, axis=None, keepdims=True)[0]

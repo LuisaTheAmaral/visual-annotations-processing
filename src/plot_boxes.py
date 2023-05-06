@@ -58,7 +58,7 @@ def getRandomColor():
 
 if __name__ == "__main__":
     
-    annotations_path = 'annotations.json'
+    annotations_path = 'annotations2.json'
     f = open(annotations_path)
     annotations = json.load(f)
     f.close()
@@ -68,9 +68,9 @@ if __name__ == "__main__":
         input_name = '../imgs/' + img["id"]
         output_name = "../annotated/" + img["id"]
 
-        #plotBoundingBoxes(input_name, output_name, annotations['yolo'], color=(0,0,255))
-        plotBoundingBoxes(input_name, output_name, img['grit'], color=(0,255,0), threshold=0.55)
-        #plotBoundingBoxes(output_name, output_name, annotations['craft'], color=(255,0,255))
+        plotBoundingBoxes(input_name, output_name, img['yolo'], color=(0,0,255))
+        plotBoundingBoxes(output_name, output_name, img['grit'], color=(0,255,0), threshold=0.55)
+        plotBoundingBoxes(output_name, output_name, img['craft'], color=(255,0,255))
 
         # img = cv2.imread(output_name)
         # cv2.imshow(output_name, img)
