@@ -2,7 +2,8 @@ import json
 from depth_perception import get_depth_map, binarize_depth_map, map_objects_to_planes
 from plot_boxes import plotFilteredBoundingBoxes
 from parse_annotations import merge_object_detections
-from sentence_builder import find_groups, parse_ocr
+from sentence_builder import find_groups, build_sentence
+from categorize import categorize_annotations
 
 f = open('annotations2.json')
 annotations = json.load(f)
@@ -29,20 +30,22 @@ for img_annotations in annotations:
 
     # filter object detections to eliminate redundant detections
     filtered_object_detections = merge_object_detections(img_annotations)
-    #print(filtered_object_detections)
 
-    del img_annotations["grit"]
-    del img_annotations["yolo"]
-    img_annotations["object_detection"] = filtered_object_detections
+    #generate categories
+    categories = categorize_annotations(filtered_object_detections, img_annotations["craft"], img_annotations["places"], img_annotations["clipcap"])
+    #generate final full text sentence
+    sentence = build_sentence(filtered_object_detections, img_annotations["craft"], img_annotations["places"], img_annotations["clipcap"])    
 
-    s = parse_ocr(filtered_object_detections, img_annotations["craft"])
-    
-    print(img_name)
-    print("---------------------------------------------------")
-    print(filtered_object_detections)
-    print("---------------------------------------------------")
-    print(s)
-    #print(find_groups(img_annotations["object_detection"]))
+    print("-------------------------------------")
+    for cat in categories:
+        print(f"{cat}:")
+        print(categories[cat])
+    print("-------------------------------------")
+    print(sentence)
+    print("-------------------------------------")
+
+    # img_annotations["object_detection"] = filtered_object_detections
+    # print(find_groups(img_annotations["object_detection"]))
 
     # with open("filtered_annotations.json", "w") as outfile:
     #     json.dump(annotations, outfile)
