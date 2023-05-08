@@ -22,6 +22,8 @@ def categorize_places(detections):
     categories["places"].add(detections["environment"])
 
     for det in detections["categories"].keys():
+        det = det.replace('_', ' ')
+        det = det.replace('/', ' ')
         categories["places"].add(det)
 
     for det in detections["attributes"]:
