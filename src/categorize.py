@@ -2,22 +2,15 @@ import spacy
 
 nlp = spacy.load("en_core_web_sm")
 
-categories = {
-        "places": set(),
-        "objects": set(),
-        "attributes": set(),
-        "ocr": set()
-    }
-
-def categorize_objects(detections):
+def categorize_objects(detections, categories):
     for det in detections:
         categories["objects"].add(det[0])
     
-def categorize_ocr(detections):
+def categorize_ocr(detections, categories):
     for det in detections:
         categories["ocr"].add(det[0])
 
-def categorize_places(detections):
+def categorize_places(detections, categories):
     for det in detections["tags"]:
         det = det.replace('_', ' ').replace('/', ' ')
         categories["attributes"].add(det)
@@ -26,7 +19,7 @@ def categorize_places(detections):
         det = det.replace('_', ' ').replace('/', ' ')
         categories["places"].add(det)
 
-def categorize_description(descriptions):
+def categorize_description(descriptions, categories):
     for desc in descriptions:
         doc = nlp(desc)
 
@@ -41,10 +34,18 @@ def categorize_description(descriptions):
                 categories["places"].add(ent.text)
 
 def categorize_annotations(objects, ocr, places, descriptions):
-    categorize_objects(objects)
-    categorize_ocr(ocr)
-    categorize_places(places)
-    categorize_description(descriptions)
+    
+    categories = {
+        "places": set(),
+        "objects": set(),
+        "attributes": set(),
+        "ocr": set()
+    }
+
+    categorize_objects(objects, categories)
+    categorize_ocr(ocr, categories)
+    categorize_places(places, categories)
+    categorize_description(descriptions, categories)
 
     return categories
     
