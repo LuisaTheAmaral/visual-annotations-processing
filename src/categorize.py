@@ -18,16 +18,9 @@ def categorize_ocr(detections):
         categories["ocr"].add(det[0])
 
 def categorize_places(detections):
-    
-    categories["places"].add(detections["environment"])
-
-    for det in detections["categories"].keys():
-        det = det.replace('_', ' ')
-        det = det.replace('/', ' ')
+    for det in detections:
+        det = det.replace('_', ' ').replace('/', ' ')
         categories["places"].add(det)
-
-    for det in detections["attributes"]:
-        categories["attributes"].add(det)
 
 def categorize_description(descriptions):
     for desc in descriptions:

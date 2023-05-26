@@ -117,16 +117,12 @@ def parse_objects(detections):
 
 def parse_places(detections):
     s = ""
-    s += f"{detections['environment']} "
 
-    for det in detections["categories"].keys():
-        det = det.replace('_', ' ')
-        det = det.replace('/', ' ')
+    for det in detections:
+        det = det.replace('_', ' ').replace('/', ' ')
         s += f"{det} "
 
-    for det in detections["attributes"]:
-        s += f"{det} "
-    return f"{s[:-1]} "
+    return s
 
 def build_sentence(objects, ocr, places, descriptions):
     

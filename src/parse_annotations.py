@@ -75,6 +75,7 @@ def merge_object_detections(object_detections):
 
     #temp fix for MEMORIA integration
     grit = object_detections[0]
+    remove_grit_stop_words(grit)
     yolo = object_detections[1]
     
     merged_list = []
@@ -103,5 +104,9 @@ def merge_object_detections(object_detections):
 
     # Combine the filtered yolo and grit lists to create the final merged list
     return merged_list + grit
+
+def remove_grit_stop_words(annotations):
+    for det in annotations:
+        det[0] = det[0].replace("a ", "").replace("an ", "").replace("the ", "")
 
 
