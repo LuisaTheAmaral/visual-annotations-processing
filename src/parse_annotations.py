@@ -50,53 +50,33 @@ def get_overlap_ratio(bb1, bb2):
     return 0
 
 #reduces redundancy in object detections by checking bounding boxes that overlap
-def merge_object_detections(annotations):
+def merge_object_detections(object_detections):
+    
     #annotations related to object detection
-    grit = annotations['grit']
-    yolo = annotations['yolo']
-
-    if len(grit):
-        # Compute the overlap ratios and similarity ratios between elements in grit
-        for i, obj1 in enumerate(grit):
-            keep_obj1 = True
-            keep_obj2 = True
-            for j, obj2 in enumerate(grit[i+1:]):
-                j = i + j + 1  # adjust index for nested loop
+    for annotations in object_detections:
+        if len(annotations):
+            # Compute the overlap ratios and similarity ratios between elements in annotations
+            for i, obj1 in enumerate(annotations):
+                keep_obj1 = True
                 keep_obj2 = True
-                overlap_ratio = get_overlap_ratio(obj1[1:], obj2[1:])
-                similarity = get_max_similarity(obj1[0], obj2[0])
-                if overlap_ratio >= 0.7 or (0.4 <= overlap_ratio < 0.7 and similarity > 0.5):
-                    if len(obj1[0]) >= len(obj2[0]):
-                        if obj2 in grit:
-                            grit.remove(obj2)
-                            #print(f"Object {obj2[0]} was excluded by {obj1[0]}")
-                    else:
-                        if obj1 in grit:
-                            grit.remove(obj1)
-                            #print(f"Object {obj1[0]} was excluded by {obj2[0]}")
-                            break #object 1 is out so no need to compare it with the remaining objects
+                for j, obj2 in enumerate(annotations[i+1:]):
+                    j = i + j + 1  # adjust index for nested loop
+                    keep_obj2 = True
+                    overlap_ratio = get_overlap_ratio(obj1[1:], obj2[1:])
+                    similarity = get_max_similarity(obj1[0], obj2[0])
+                    if overlap_ratio >= 0.7 or (0.4 <= overlap_ratio < 0.7 and similarity > 0.5):
+                        if obj1[-1] >= obj2[-1]:
+                            if obj2 in annotations:
+                                annotations.remove(obj2)
+                        else:
+                            if obj1 in annotations:
+                                annotations.remove(obj1)
+                                break #object 1 is out so no need to compare it with the remaining objects
 
-    if len(yolo):
-        # Compute the overlap ratios and similarity ratios between elements in grit
-        for i, obj1 in enumerate(yolo):
-            keep_obj1 = True
-            keep_obj2 = True
-            for j, obj2 in enumerate(yolo[i+1:]):
-                j = i + j + 1  # adjust index for nested loop
-                keep_obj2 = True
-                overlap_ratio = get_overlap_ratio(obj1[1:], obj2[1:])
-                similarity = get_max_similarity(obj1[0], obj2[0])
-                if overlap_ratio >= 0.7 or (0.4 <= overlap_ratio < 0.7 and similarity > 0.5):
-                    if obj1[-1] >= obj2[-1]:
-                        if obj2 in yolo:
-                            yolo.remove(obj2)
-                            #print(f"Object {obj2[0]} was excluded by {obj1[0]}")
-                    else:
-                        if obj1 in yolo:
-                            yolo.remove(obj1)
-                            #print(f"Object {obj1[0]} was excluded by {obj2[0]}")
-                            break #object 1 is out so no need to compare it with the remaining objects
-
+    #temp fix for MEMORIA integration
+    grit = object_detections[0]
+    yolo = object_detections[1]
+    
     merged_list = []
     if len(yolo) and len(grit):
         # Compute the overlap ratios and similarity ratios between elements in yolo and grit

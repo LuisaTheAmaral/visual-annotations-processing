@@ -1,3 +1,5 @@
+#this script was initially used to join every annotations without processing them
+
 import json
 from collections import defaultdict
 import inflect

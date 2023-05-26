@@ -12,12 +12,6 @@ f.close()
 for img_annotations in annotations:
     img_name = img_annotations["id"]
 
-    aux = []
-    for i in img_annotations["grit"]:
-        if i[5] >= 0.55:
-            aux.append(i)
-    img_annotations["grit"] = aux
-
     # create depth map of the image and binarize it
     input_image = "../imgs/" + img_name
     depth_map = get_depth_map(input_image)
@@ -29,10 +23,11 @@ for img_annotations in annotations:
     map_objects_to_planes(img_annotations["craft"], bin_depth_map)
 
     # filter object detections to eliminate redundant detections
-    filtered_object_detections = merge_object_detections(img_annotations)
+    filtered_object_detections = merge_object_detections([img_annotations["grit"], img_annotations["yolo"]])
 
-    #generate categories
+    #categorize annotations
     categories = categorize_annotations(filtered_object_detections, img_annotations["craft"], img_annotations["places"], img_annotations["clipcap"])
+    
     #generate final full text sentence
     sentence = build_sentence(filtered_object_detections, img_annotations["craft"], img_annotations["places"], img_annotations["clipcap"])    
 
@@ -40,15 +35,7 @@ for img_annotations in annotations:
     for cat in categories:
         print(f"{cat}:")
         print(categories[cat])
+    
     print("-------------------------------------")
     print(sentence)
     print("-------------------------------------")
-
-    # img_annotations["object_detection"] = filtered_object_detections
-    # print(find_groups(img_annotations["object_detection"]))
-
-    # with open("filtered_annotations.json", "w") as outfile:
-    #     json.dump(annotations, outfile)
-
-    # output_name = "../annotated/filtered_" + img_name
-    # plotFilteredBoundingBoxes(input_image, output_name, img_annotations['object_detection']) 

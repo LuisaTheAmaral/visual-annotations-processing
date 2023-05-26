@@ -94,7 +94,7 @@ def parse_ocr(obj_detections, ocr_detections):
         for ocr in misc:
             s += f"'{ocr}', "
         s = s[:-2]
-        s += " can also be read in the scene. "
+        s += " can be read in the scene. "
 
     return s, non_overlapped_objs
     
@@ -126,16 +126,16 @@ def parse_places(detections):
 
     for det in detections["attributes"]:
         s += f"{det} "
-    return f"{s[:-1]}. "
+    return f"{s[:-1]} "
 
 def build_sentence(objects, ocr, places, descriptions):
     
     s = ""
     for desc in descriptions:
-        s += desc + ". "
+        s += desc + " "
     
     ocr_sentence, reduced_objects = parse_ocr(objects, ocr)
     obj_sentence = parse_objects(reduced_objects)
     places_sentence = parse_places(places)
 
-    return s + obj_sentence + places_sentence + ocr_sentence
+    return s + obj_sentence + ocr_sentence + places_sentence

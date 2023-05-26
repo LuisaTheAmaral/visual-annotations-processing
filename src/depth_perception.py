@@ -51,7 +51,7 @@ def map_objects_to_planes(annotations, depth_map):
     for obj in annotations:
         x0, y0, x1, y1 = obj[1:-1]
         region = depth_map[math.floor(y0):math.ceil(y1), math.floor(x0):math.ceil(x1)]
-        plane = stats.mode(region, axis=None, keepdims=True)[0]
+        plane = stats.mode(region, axis=None)[0]
         if plane:
             obj.append("foreground")
         else:
