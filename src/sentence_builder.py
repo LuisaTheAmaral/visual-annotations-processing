@@ -118,7 +118,13 @@ def parse_objects(detections):
 def parse_places(detections):
     s = ""
 
-    for det in detections:
+    categories = list(detections["categories"].items())
+    categories = sorted(categories, key = lambda x: x[1], reverse=True)
+
+    for det, _ in categories:
+        s += f"{det.replace('_', ' ').replace('/', ' ')} "
+
+    for det in detections["tags"]:
         det = det.replace('_', ' ').replace('/', ' ')
         s += f"{det} "
 

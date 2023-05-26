@@ -18,7 +18,11 @@ def categorize_ocr(detections):
         categories["ocr"].add(det[0])
 
 def categorize_places(detections):
-    for det in detections:
+    for det in detections["tags"]:
+        det = det.replace('_', ' ').replace('/', ' ')
+        categories["attributes"].add(det)
+
+    for det, _ in detections["categories"].items():
         det = det.replace('_', ' ').replace('/', ' ')
         categories["places"].add(det)
 
