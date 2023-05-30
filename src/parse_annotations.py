@@ -62,8 +62,12 @@ def merge_object_detections(object_detections):
                 for j, obj2 in enumerate(annotations[i+1:]):
                     j = i + j + 1  # adjust index for nested loop
                     keep_obj2 = True
-                    overlap_ratio = get_overlap_ratio(obj1[1:], obj2[1:])
-                    similarity = get_max_similarity(obj1[0], obj2[0])
+                    if len(obj1) > 2 and len(obj2) > 2:
+                        overlap_ratio = get_overlap_ratio(obj1[1:], obj2[1:])
+                        similarity = get_max_similarity(obj1[0], obj2[0])
+                    else: #one of the objects or both dont't have bounding box
+                        overlap_ratio = 0
+                        similarity = 0
                     if overlap_ratio >= 0.7 or (0.4 <= overlap_ratio < 0.7 and similarity > 0.5):
                         if obj1[-1] >= obj2[-1]:
                             if obj2 in annotations:
@@ -73,7 +77,7 @@ def merge_object_detections(object_detections):
                                 annotations.remove(obj1)
                                 break #object 1 is out so no need to compare it with the remaining objects
 
-    #temp fix for MEMORIA integration
+    #specific for MEMORIA integration
     grit = object_detections[0]
     remove_grit_stop_words(grit)
     yolo = object_detections[1]
@@ -85,8 +89,12 @@ def merge_object_detections(object_detections):
         similarity_ratios = np.zeros((len(yolo), len(grit)))
         for i, elem1 in enumerate(yolo):
             for j, elem2 in enumerate(grit):
-                overlap_ratios[i, j] = get_overlap_ratio(elem1[1:], elem2[1:])
-                similarity_ratios[i, j] = get_max_similarity(elem1[0], elem2[0])
+                if len(elem1)> 2 and len(elem2) > 2:
+                    overlap_ratios[i, j] = get_overlap_ratio(elem1[1:], elem2[1:])
+                    similarity_ratios[i, j] = get_max_similarity(elem1[0], elem2[0])
+                else:
+                    overlap_ratios[i, j] = 0
+                    similarity_ratios[i, j] = 0
 
         # Filter out elements from yolo that have an overlap ratio greater than or equal to 0.7 with any element in grit
         merged_list = [yolo[i] for i in range(len(yolo)) if np.max(overlap_ratios[i]) < 0.7]

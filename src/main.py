@@ -19,7 +19,7 @@ bin_depth_map = binarize_depth_map(depth_map)
 # use depth map to establish which objects are on the foreground and which are on the background
 map_objects_to_planes(img_annotations["grit"], bin_depth_map)
 map_objects_to_planes(img_annotations["yolo"], bin_depth_map)
-map_objects_to_planes(img_annotations["craft"], bin_depth_map)
+#map_objects_to_planes(img_annotations["craft"], bin_depth_map)
 
 # filter object detections to eliminate redundant detections
 filtered_object_detections = merge_object_detections([img_annotations["grit"], img_annotations["yolo"]])

@@ -69,7 +69,10 @@ def parse_ocr(obj_detections, ocr_detections):
     for ocr in ocr_detections:
         overlaps = []
         for obj in obj_detections:
-            overlap = get_ocr_overlap(ocr[1:], obj[1:])
+            if len(ocr) > 2 and len(obj) > 2:
+                overlap = get_ocr_overlap(ocr[1:], obj[1:])
+            else:
+                overlap = 0
             if overlap > 0.7:
                 overlaps.append(obj)
 
@@ -102,16 +105,25 @@ def parse_objects(detections):
 
     foreground = []
     background = []
+    user_added = []
 
     for det in detections:
-        if det[-1] == "foreground":
-            foreground.append(det[0])
+        if len(det) == 2:
+            user_added.append(det[0])
+        elif det[-1] == "foreground":
+            foreground.append(det)
         else:
-            background.append(det[0])
+            background.append(det)
 
-    txt = ' '.join(foreground)
-    txt += ' '
-    txt += ' '.join(background)
+    #sort by confidence
+    foreground = sorted(foreground, key= lambda x: x[-2], reverse=True)
+    background = sorted(background, key= lambda x: x[-2], reverse=True)
+
+    #after sorting store only the object names
+    foreground = [obj[0] for obj in foreground]
+    background = [obj[0] for obj in background]
+    
+    txt = ' '.join(user_added + foreground + background)
 
     return f"{txt} "
 
