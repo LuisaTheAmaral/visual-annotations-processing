@@ -114,7 +114,8 @@ def merge_object_detections(object_detections):
     return merged_list + grit
 
 def remove_grit_stop_words(annotations):
+    stop_words = ['a', 'an', 'the']
+    
     for det in annotations:
-        det[0] = det[0].replace("a ", "").replace("an ", "").replace("the ", "")
-
+        det[0] = ' '.join([word for word in det[0].split() if word not in stop_words])
 
