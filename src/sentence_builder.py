@@ -73,12 +73,15 @@ def parse_ocr(obj_detections, ocr_detections):
                 overlap = get_ocr_overlap(ocr[1:], obj[1:])
             else:
                 overlap = 0
-            if overlap > 0.7:
-                overlaps.append(obj)
+            if overlap > 0.5:
+                overlaps.append( (obj, overlap) )
 
-        #if the ocr overlapped with multiple detections, determine that it is written in the one with the smallest area
+        #if the ocr overlapped with multiple detections, determine that it is written in the one with the highest ratio
         if overlaps:
-            chosen_obj = min(overlaps, key = lambda x: (x[3] - x[1])*(x[4] - x[2]))
+            max_overlaps = [x[0] for x in overlaps if x[1] == max(overlaps, key = lambda x: x[1])[1]]
+            #if there are multiple detections with the highest ratio, determine that it is written in the one with the smallest area
+            chosen_obj = min(max_overlaps, key = lambda x: (x[3] - x[1])*(x[4] - x[2]))            
+            
             ocr_obj_mapping[chosen_obj[0]].append(ocr[0])
             if chosen_obj in non_overlapped_objs:
                 non_overlapped_objs.remove(chosen_obj)
@@ -86,18 +89,16 @@ def parse_ocr(obj_detections, ocr_detections):
             misc.append(ocr[0])
         
     for obj in ocr_obj_mapping:
-        s += f"Words "
         for ocr in ocr_obj_mapping[obj]:
-           s += f"'{ocr}', " 
+           s += f"{ocr}, " 
         s = s[:-2]
         s += f" on {obj}. "
 
     if misc:
-        s += "Words "
         for ocr in misc:
-            s += f"'{ocr}', "
+            s += f"{ocr}, "
         s = s[:-2]
-        s += " can be read in the scene. "
+        s += ". "
 
     return s, non_overlapped_objs
     
@@ -125,7 +126,7 @@ def parse_objects(detections):
     
     txt = ' '.join(user_added + foreground + background)
 
-    return f"{txt} "
+    return f"{txt}. "
 
 def parse_places(detections):
     s = ""
@@ -142,7 +143,7 @@ def parse_places(detections):
 
     return s
 
-def build_sentence(objects, ocr, places, descriptions):
+def build_sentence(objects, ocr, places, descriptions, locations):
     
     s = ""
     for desc in descriptions:
@@ -152,4 +153,4 @@ def build_sentence(objects, ocr, places, descriptions):
     obj_sentence = parse_objects(reduced_objects)
     places_sentence = parse_places(places)
 
-    return s + obj_sentence + ocr_sentence + places_sentence
+    return s + obj_sentence + ocr_sentence + places_sentence + " ".join(locations)

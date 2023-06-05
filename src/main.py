@@ -25,10 +25,10 @@ map_objects_to_planes(img_annotations["yolo"], bin_depth_map)
 filtered_object_detections = merge_object_detections([img_annotations["grit"], img_annotations["yolo"]])
 
 #categorize annotations
-categories = categorize_annotations(filtered_object_detections, img_annotations["craft"], img_annotations["places"], img_annotations["clipcap"])
+categories = categorize_annotations(filtered_object_detections, img_annotations["craft"], img_annotations["places"], img_annotations["clipcap"], img_annotations["locations"])
 
 #generate final full text sentence
-sentence = build_sentence(filtered_object_detections, img_annotations["craft"], img_annotations["places"], img_annotations["clipcap"])    
+sentence = build_sentence(filtered_object_detections, img_annotations["craft"], img_annotations["places"], img_annotations["clipcap"], img_annotations["locations"])    
 
 print("-------------------------------------")
 for cat in categories:

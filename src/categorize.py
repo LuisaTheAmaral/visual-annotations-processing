@@ -33,19 +33,25 @@ def categorize_description(descriptions, categories):
             if ent.label_ == "GPE":
                 categories["places"].add(ent.text)
 
-def categorize_annotations(objects, ocr, places, descriptions):
+def categorize_locations(locations, categories):
+    for loc in locations:
+        categories["locations"].add(loc)
+
+def categorize_annotations(objects, ocr, places, descriptions, locations):
     
     categories = {
         "places": set(),
         "objects": set(),
         "attributes": set(),
-        "ocr": set()
+        "ocr": set(),
+        "locations": set()
     }
 
     categorize_objects(objects, categories)
     categorize_ocr(ocr, categories)
     categorize_places(places, categories)
     categorize_description(descriptions, categories)
+    categorize_locations(locations, categories)
 
     return categories
     
