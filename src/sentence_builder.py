@@ -61,6 +61,7 @@ def get_ocr_overlap(box1, box2):
 
 def parse_ocr(obj_detections, ocr_detections):
     
+    count = 0
     s = ""
     ocr_obj_mapping = defaultdict(list) #stores associations with objects and ocr that overlaps with them
     misc = [] #stores ocr that does not overlap with any object
@@ -89,18 +90,19 @@ def parse_ocr(obj_detections, ocr_detections):
             misc.append(ocr[0])
         
     for obj in ocr_obj_mapping:
-        for ocr in ocr_obj_mapping[obj]:
-           s += f"{ocr}, " 
-        s = s[:-2]
-        s += f" on {obj}. "
+        count += len(ocr_obj_mapping[obj])
+    #     for ocr in ocr_obj_mapping[obj]:
+    #        s += f"{ocr}, " 
+    #     s = s[:-2]
+    #     s += f" on {obj}. "
 
-    if misc:
-        for ocr in misc:
-            s += f"{ocr}, "
-        s = s[:-2]
-        s += ". "
+    # if misc:
+    #     for ocr in misc:
+    #         s += f"{ocr}, "
+    #     s = s[:-2]
+    #     s += ". "
 
-    return s, non_overlapped_objs
+    return count
     
 def parse_objects(detections):
 

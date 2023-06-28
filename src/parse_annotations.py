@@ -96,8 +96,8 @@ def merge_object_detections(object_detections):
                     overlap_ratios[i, j] = 0
                     similarity_ratios[i, j] = 0
 
-        # Filter out elements from yolo that have an overlap ratio greater than or equal to 0.7 with any element in grit
-        merged_list = [yolo[i] for i in range(len(yolo)) if np.max(overlap_ratios[i]) < 0.7]
+        # Filter out elements from yolo that have an overlap ratio greater than or equal to 0.4 with any element in grit
+        merged_list = [yolo[i] for i in range(len(yolo)) if np.max(overlap_ratios[i]) < 0.4]
 
         # Filter out elements from yolo that have an overlap ratio between 0.4 and 0.7 with at least one element in grit and that have a high object similarity
         for i, elem1 in enumerate(yolo):
@@ -106,12 +106,12 @@ def merge_object_detections(object_detections):
                     merged_list.append(elem1)
                     break
     elif len(yolo):
-        return yolo
+        return len(yolo), 0, yolo
     elif len(grit):
-        return grit
+        return 0, len(grit), grit
 
     # Combine the filtered yolo and grit lists to create the final merged list
-    return merged_list + grit
+    return len(merged_list), len(grit), merged_list + grit
 
 def remove_grit_stop_words(annotations):
     stop_words = ['a', 'an', 'the']
