@@ -12,16 +12,16 @@ f.close()
 img_name = img_annotations["id"]
 
 # create depth map of the image and binarize it
-input_image = "../imgs/" + img_name
-depth_map = get_depth_map(input_image)
-bin_depth_map = binarize_depth_map(depth_map)
+# input_image = "../imgs/" + img_name
+# depth_map = get_depth_map(input_image)
+# bin_depth_map = binarize_depth_map(depth_map)
 
 num_grit = len(img_annotations["grit"])
 num_yolo = len(img_annotations["yolo"])
 
 # use depth map to establish which objects are on the foreground and which are on the background
-map_objects_to_planes(img_annotations["grit"], bin_depth_map)
-map_objects_to_planes(img_annotations["yolo"], bin_depth_map)
+# map_objects_to_planes(img_annotations["grit"], bin_depth_map)
+# map_objects_to_planes(img_annotations["yolo"], bin_depth_map)
 #map_objects_to_planes(img_annotations["craft"], bin_depth_map)
 
 # filter object detections to eliminate redundant detections

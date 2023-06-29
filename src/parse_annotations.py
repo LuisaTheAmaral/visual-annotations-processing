@@ -33,10 +33,10 @@ def get_max_similarity(str1, str2):
 
 #returns ratio of overlap of two bounding boxes
 def get_overlap_ratio(bb1, bb2):
-    xmin, ymin, xmax, ymax, _, plane1 = bb1
-    xmin2, ymin2, xmax2, ymax2, _, plane2 = bb2
+    xmin, ymin, xmax, ymax, _ = bb1
+    xmin2, ymin2, xmax2, ymax2, _ = bb2
     overlap = []
-    if not (xmin > xmax2 or xmin2 > xmax) or not (ymax > ymin2 or ymax2 > ymin) and plane1 == plane2:
+    if not (xmin > xmax2 or xmin2 > xmax) or not (ymax > ymin2 or ymax2 > ymin):
         # boxes overlap
         # area of intersection
         SI = max(0, min(xmax, xmax2) - max(xmin, xmin2)) * max(0, min(ymax, ymax2) - max(ymin, ymin2))
